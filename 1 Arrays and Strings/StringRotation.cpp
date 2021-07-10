@@ -24,10 +24,22 @@ int main(){
 }
 
 /*
-    
+    O(n) time complexity
+
+    Utilizes the fact that a rotated string has a pivot point such that
+    s1 = xy, s2 = yx, where s2+s2 = yxyx, which can utilize substring
+    to find "xy", which is equivalent to s1's "xy".
 */
 bool checkRotation(string s1, string s2){
-    return false;
+    if(s1.length() != s2.length()){
+        return false;
+    }
+
+    if(isSubstring(s1, s2.append(s2))){
+        return true;
+    } else {
+        return false;
+    }
 }
 
 bool isSubstring(string s1, string s2){
