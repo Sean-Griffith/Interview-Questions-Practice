@@ -63,13 +63,12 @@ bool List<DataType>::isEmpty() const {
 }
 
 template <typename DataType>
-bool List<DataType>::isFull() const {
-
-}
-
-template <typename DataType>
 void List<DataType>::gotoBeginning(){
-
+    if(isEmpty()){
+        throw logic_error("gotoBeginning() empty list");
+    } else {
+        m_cursor = m_head;
+    }
 }
 
 template <typename DataType>
