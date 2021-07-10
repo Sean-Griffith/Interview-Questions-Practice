@@ -34,8 +34,21 @@ List<DataType>::~List(){
 }
 
 template <typename DataType>
-bool List<DataType>::insert(){
-    return false;
+bool List<DataType>::insert(const DataType& newDataValue){
+    if(isEmpty()){  
+        m_head = new ListNode(newDataValue);
+        gotoBeginning();
+    } else {
+        if(m_cursor->next == NULL){
+            m_cursor->next = new ListNode(newDataValue);
+            gotoNext();
+        } else {
+            ListNode* currentNode = cursor;
+            ListNode* afterNode = cursor->next;
+            cursor = new ListNode(newDataValue, afterNode);
+            currentNode->m_next = cursor;
+        }
+    }
 }
 
 template <typename DataType>
@@ -44,7 +57,7 @@ bool List<DataType>::remove(){
 }
 
 template <typename DataType>
-bool List<DataType>::replace(){
+bool List<DataType>::replace(const DataType& newDataValue){
     return false;
 }
 

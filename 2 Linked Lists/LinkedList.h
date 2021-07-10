@@ -12,9 +12,9 @@ class List {
         List& operator=(const List& other);
         ~List();
 
-        bool insert();
+        bool insert(const DataType& newDataValue);
         bool remove();
-        bool replace();
+        bool replace(const DataType& newDataValue);
         void clear();
 
         bool isEmpty() const;
