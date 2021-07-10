@@ -6,10 +6,11 @@
     How would you solve this problem if a temporary buffer is not allowed?
 */
 #include <iostream>
+#include "LinkedList.h"
 using namespace std;
 
 int main(){
-    
+    List<int> example;
     return 1;
 }
 
