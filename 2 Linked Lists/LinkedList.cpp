@@ -53,17 +53,64 @@ bool List<DataType>::insert(const DataType& newDataValue){
 
 template <typename DataType>
 bool List<DataType>::remove(){
-    return false;
+    if(isEmpty()){
+        throw logic_error("remove() empty list");
+        return false;
+    } else {
+        if(m_cursor == m_head){
+            if(m_cursor->next){
+                m_cursor = m_cursor->next;
+                delete m_head;
+                m_head = m_cursor;
+            } else {
+                delete m_head;
+                m_head = NULL;
+                m_cursor = NULL;
+            }
+        } else {
+            ListNode* current = m_cursor;
+            gotoPrior();
+            if(current->next){
+                m_cursor->next = current->next;
+            } else {
+                m_cursor->next = NULL;
+            }
+            delete current;
+        }
+        return true;
+    }
 }
 
 template <typename DataType>
 bool List<DataType>::replace(const DataType& newDataValue){
-    return false;
+    if(isEmpty()){
+        throw logic_error("replace() empty list");
+        return false;
+    } else {
+        if(m_cursor){
+            m_cursor->m_dataItem = newDataValue;
+            return true;
+        } else {
+            throw logic_error("replace() invalid cursor");
+            return false;
+        }
+    }
 }
 
 template <typename DataType>
 void List<DataType>::clear(){
-
+    if(!isEmpty()){
+        gotoBeginning();
+        ListNode* tmp = m_cursor;
+        while(m_cursor->next){
+            gotoNext();
+            delete tmp;
+            tmp = m_cursor;
+        }
+        delete tmp;
+        m_cursor = NULL;
+        m_head = NULL;
+    }
 }
 
 template <typename DataType>
