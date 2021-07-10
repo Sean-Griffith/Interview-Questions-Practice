@@ -55,7 +55,11 @@ void List<DataType>::clear(){
 
 template <typename DataType>
 bool List<DataType>::isEmpty() const {
-    
+    if(m_head == NULL){
+        return true;
+    } else {
+        return false;
+    }
 }
 
 template <typename DataType>

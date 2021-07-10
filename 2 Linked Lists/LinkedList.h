@@ -18,7 +18,6 @@ class List {
         void clear();
 
         bool isEmpty() const;
-        bool isFull() const;
 
         void gotoBeginning() throw (logic_error);
         void gotoEnd() throw (logic_error);
