@@ -12,30 +12,30 @@ class List {
         List& operator=(const List& other);
         ~List();
 
-        bool insert() throw (logic_error);
-        bool remove() throw (logic_error);
-        bool replace() throw (logic_error);
+        bool insert();
+        bool remove();
+        bool replace();
         void clear();
 
         bool isEmpty() const;
 
-        void gotoBeginning() throw (logic_error);
-        void gotoEnd() throw (logic_error);
-        bool gotoNext() throw (logic_error);
-        bool gotoPrior() throw (logic_error);
+        void gotoBeginning();
+        void gotoEnd();
+        bool gotoNext();
+        bool gotoPrior();
 
-        DataType getCursorValue() const throw (logic_error);
+        DataType getCursorValue() const;
 
-        bool moveToBeginning() throw (logic_error);
+        bool moveToBeginning();
 
-        bool insertBefore(const DataType& newDataValue) throw (logic_error);
+        bool insertBefore(const DataType& newDataValue);
 
         void showStructure() const;
 
     private:
         class ListNode {
             public:
-                ListNode(const DataType& nodeDataValue, ListNode* nextPtr);
+                ListNode(const DataType& nodeDataValue, ListNode* nextPtr=NULL);
                 int m_dataItem;
                 ListNode* m_next;
         };
