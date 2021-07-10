@@ -60,12 +60,38 @@ List<DataType>::List(){
 
 template <typename DataType>
 List<DataType>::List(const List& other){
-    
+    if(other.isEmpty()){
+        clear();
+    } else {
+        ListNode* tmp = other.m_head;
+        m_head = NULL;
+        m_cursor = NULL;
+        while(tmp != NULL){
+            insert(tmp->m_dataItem);
+            tmp = tmp->m_next;
+        }
+    }
 }
 
 template <typename DataType>
 List<DataType>& List<DataType>::operator=(const List& other){
-
+    if(other == this){
+        return *this;
+    } else {
+        m_head = NULL;
+        m_cursor = NULL;
+        if(other.isEmpty()){
+            clear();
+            return *this;
+        } else {
+            ListNode* tmp = other.m_head;
+            while(tmp != NULL){
+                insert(tmp->m_dataItem);
+                tmp = tmp->m_next;
+            }
+            return *this;
+        }
+    }
 }
 
 template <typename DataType>
@@ -229,11 +255,13 @@ DataType List<DataType>::getCursorValue() const {
 
 template <typename DataType>
 bool List<DataType>::moveToBeginning(){
+    throw logic_error("moveToBeginning() not implemented");
     return false;
 }
 
 template <typename DataType>
 bool List<DataType>::insertBefore(const DataType& newDataValue){
+    throw logic_error("insertBefore() not implemented");
     return false;
 }
 
