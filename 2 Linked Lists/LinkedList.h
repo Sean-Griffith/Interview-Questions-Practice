@@ -3,6 +3,7 @@
 
 #include <stdexcept>
 #include <iostream>
+#include <map>
 using namespace std;
 
 template <typename DataType>
@@ -32,6 +33,9 @@ class List {
         bool insertBefore(const DataType& newDataValue);
 
         void showStructure() const;
+
+        void removeDups();
+        void removeDupsNoBuffer();
 
     private:
         class ListNode {
@@ -138,6 +142,7 @@ bool List<DataType>::remove(){
             gotoPrior();
             if(current->m_next){
                 m_cursor->m_next = current->m_next;
+                m_cursor = m_cursor->m_next;
             } else {
                 m_cursor->m_next = NULL;
             }
@@ -283,6 +288,64 @@ void List<DataType>::showStructure() const {
             }
         }
         cout << endl;
+    }
+}
+
+template <typename DataType>
+void List<DataType>::removeDups(){
+    map<DataType, int> counter;
+    m_cursor = m_head;
+
+    cout << "Removing duplicates" << endl;
+
+    counter[m_cursor->m_dataItem]++;
+    while(m_cursor->m_next != NULL){
+        if(counter[m_cursor->m_next->m_dataItem] >= 1){
+            // Remove the node
+            if(m_cursor->m_next->m_next == NULL){
+                //end of list
+                delete(m_cursor->m_next);
+                m_cursor->m_next = NULL;
+            } else {
+                //middle of list
+                ListNode* after = m_cursor->m_next->m_next;
+                delete(m_cursor->m_next);
+                m_cursor->m_next = after;
+            }
+        } else {
+            // Increment the counter for that data value
+            counter[m_cursor->m_next->m_dataItem]++;
+            gotoNext();
+        }  
+    }
+}
+
+template <typename DataType>
+void List<DataType>::removeDupsNoBuffer(){
+    ListNode* scanner = m_head;
+
+    cout << "Removing duplicates without a buffer" << endl;
+
+    while(scanner != NULL){
+        m_cursor = scanner->m_next;
+        cout << "Moving Cursor" << endl;
+        while(m_cursor->m_next != NULL){
+            cout << endl;
+            showStructure();
+            cout << scanner->m_dataItem << " ? " << m_cursor->m_dataItem << endl;
+            if(m_cursor->m_dataItem == scanner->m_dataItem){
+                cout << "Removing duplicate " << scanner->m_dataItem << endl;
+                remove();
+            } else {
+                gotoNext();
+            }
+        }
+        if(m_cursor->m_dataItem == scanner->m_dataItem){
+            cout << "Removing duplicate " << scanner->m_dataItem << endl;
+            remove();
+        }
+
+        scanner = scanner->m_next;
     }
 }
 
