@@ -36,6 +36,7 @@ class List {
 
         void removeDups();
         void removeDupsNoBuffer();
+        DataType kthToLast(int k);
 
     private:
         class ListNode {
@@ -347,6 +348,32 @@ void List<DataType>::removeDupsNoBuffer(){
 
         scanner = scanner->m_next;
     }
+}
+
+template <typename DataType>
+DataType List<DataType>::kthToLast(int k){
+    if(k < 1){
+        throw logic_error("K >= 1");
+    }
+    ListNode* kthToLastPtr = m_head;
+    bool tooLarge = false;
+    gotoBeginning();
+    showStructure();
+    for(int i = 0; i < k; i++){
+        if(!gotoNext()){
+            tooLarge = true;
+        }
+    }
+    showStructure();
+    while(gotoNext()){
+        kthToLastPtr = kthToLastPtr->m_next;
+    }
+    
+    if(!tooLarge){
+        kthToLastPtr = kthToLastPtr->m_next;
+    }
+    
+    return kthToLastPtr->m_dataItem;
 }
 
 #endif
