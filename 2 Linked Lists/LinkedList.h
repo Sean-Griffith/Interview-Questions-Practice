@@ -37,6 +37,7 @@ class List {
         void removeDups();
         void removeDupsNoBuffer();
         DataType kthToLast(int k);
+        void removeMiddleNode(const DataType& value);
 
     private:
         class ListNode {
@@ -374,6 +375,27 @@ DataType List<DataType>::kthToLast(int k){
     }
     
     return kthToLastPtr->m_dataItem;
+}
+
+template <typename DataType>
+void List<DataType>::removeMiddleNode(const DataType& value){
+    gotoBeginning();
+    do {
+        if(m_cursor->m_dataItem == value){
+            cout << "Found " << m_cursor->m_dataItem << endl;
+            if(m_cursor == m_head || m_cursor->m_next == NULL){
+                throw logic_error("removeMiddleNode() Attempted to remove non-middle node");
+            } else {
+                ListNode* next = m_cursor->m_next;
+                m_cursor->m_dataItem = next->m_dataItem;
+                m_cursor->m_next = next->m_next;
+                delete(next);
+                break;
+            }
+        }
+        cout << "Exiting" << endl;
+    } while(gotoNext());
+    
 }
 
 #endif
