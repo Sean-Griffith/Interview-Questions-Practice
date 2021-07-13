@@ -38,6 +38,7 @@ class List {
         void removeDupsNoBuffer();
         DataType kthToLast(int k);
         void removeMiddleNode(const DataType& value);
+        void partition(const DataType& value);
 
     private:
         class ListNode {
@@ -262,7 +263,7 @@ DataType List<DataType>::getCursorValue() const {
 
 template <typename DataType>
 bool List<DataType>::moveToBeginning(){
-    throw logic_error("moveToBeginning() not implemented");
+    throw logic_error("insertBefore() not implemented");
     return false;
 }
 
@@ -396,6 +397,38 @@ void List<DataType>::removeMiddleNode(const DataType& value){
         cout << "Exiting" << endl;
     } while(gotoNext());
     
+}
+
+template <typename DataType>
+void List<DataType>::partition(const DataType& value){
+    gotoBeginning();
+    cout << "Partition by " << value << endl;
+    bool inserted = false;
+    do {
+        showStructure();
+        if(m_cursor->m_dataItem >= value && !inserted){
+            ListNode* newNode = new ListNode(value);
+            if(m_cursor == m_head){
+                newNode->m_next = m_head;
+                m_head = newNode;
+            } else {
+                newNode->m_next = m_cursor;
+                gotoPrior();
+                m_cursor->m_next = newNode;
+                gotoNext();
+            }
+            
+            inserted = true;
+        } else if(m_cursor->m_dataItem < value && inserted){
+            cout << "checking " << m_cursor->m_dataItem << endl;
+            ListNode* nextNode = m_cursor->m_next;
+            ListNode* currentNode = m_cursor;
+            gotoPrior();
+            currentNode->m_next = m_head;
+            m_cursor->m_next = nextNode;
+            m_head = currentNode;
+        }
+    } while(gotoNext());
 }
 
 #endif
