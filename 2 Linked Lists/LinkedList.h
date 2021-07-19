@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <map>
+#include <math.h>
 using namespace std;
 
 template <typename DataType>
@@ -39,6 +40,7 @@ class List {
         DataType kthToLast(int k);
         void removeMiddleNode(const DataType& value);
         void partition(const DataType& value);
+        int sumLists(List& other);
 
     private:
         class ListNode {
@@ -429,6 +431,53 @@ void List<DataType>::partition(const DataType& value){
             m_head = currentNode;
         }
     } while(gotoNext());
+}
+
+template <typename DataType>
+int List<DataType>::sumLists(List& other){
+    int sum = 0;
+    List<DataType> sumList;
+
+    ListNode* ptr1 = m_head;
+    ListNode* ptr2 = other.m_head;
+
+    int carry = 0;
+    int remainder = 0;
+    while(ptr1 || ptr2){
+
+        if(ptr1 && ptr2){
+            int nodeSum = ptr1->m_dataItem + ptr2->m_dataItem + carry;
+            //cout << ptr1->m_dataItem << " + " << ptr2->m_dataItem << " + " << carry << " = " << nodeSum << endl;
+            carry = nodeSum/10;
+            sumList.insert(nodeSum%10);
+            ptr1 = ptr1->m_next;
+            ptr2 = ptr2->m_next;
+        } else if(ptr1 && !ptr2){
+            int nodeSum = ptr1->m_dataItem + carry;
+            //cout << ptr1->m_dataItem << " + " <<  carry << " = " << nodeSum << endl;
+            carry = nodeSum/10;
+            sumList.insert(nodeSum%10);
+            ptr1 = ptr1->m_next;
+        } else if(!ptr1 && ptr2){
+            int nodeSum = ptr2->m_dataItem + carry;
+            //cout << ptr2->m_dataItem << " + " <<  carry << " = " << nodeSum << endl;
+            carry = nodeSum/10;
+            sumList.insert(nodeSum%10);
+            ptr2 = ptr2->m_next;
+        } else if(carry){
+            //cout << carry << " = " << carry << endl;
+            sumList.insert(carry);
+        }
+        
+    }
+    sumList.showStructure();
+
+    int place = 0;
+    for(ListNode* tmp = sumList.m_head; tmp; tmp = tmp->m_next){
+        sum += tmp->m_dataItem*pow(10,place++);
+    }
+
+    return sum;
 }
 
 #endif
