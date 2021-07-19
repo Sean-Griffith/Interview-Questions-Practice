@@ -41,6 +41,7 @@ class List {
         void removeMiddleNode(const DataType& value);
         void partition(const DataType& value);
         int sumLists(List& other);
+        bool isPalindrome();
 
     private:
         class ListNode {
@@ -478,6 +479,11 @@ int List<DataType>::sumLists(List& other){
     }
 
     return sum;
+}
+
+template <typename DataType>
+bool List<DataType>::isPalindrome(){
+    return false;
 }
 
 #endif
