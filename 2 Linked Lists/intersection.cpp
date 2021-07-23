@@ -6,9 +6,33 @@
     list, they are intersecting.
 */
 #include <iostream>
+#include "LinkedList.h"
 using namespace std;
 
+#define N 5
+
+void checkIntersection(List<int>& combinationList, List<int>& otherList);
+
 int main(){
+    List<int> link1, link2, link3, combined1, combined2, empty;
+
+    for(int i = 0; i < N; i++){
+        link1.insert(i);
+        link2.insert(N-i);
+        link3.insert(i*2);
+        link3.insert(N);
+    }
+
+    checkIntersection(link2, link3);
+
+    combined1.generateCombinedList(link1, link2);
+    checkIntersection(combined1, link2);
+
+    combined2.generateCombinedList(link3, link2);
+    checkIntersection(combined2, link3);
+
+    checkIntersection(link1, empty);
+    checkIntersection(empty, link1);
     
     return 1;
 }
@@ -16,3 +40,12 @@ int main(){
 /*
     
 */
+void checkIntersection(List<int>& combinationList, List<int>& otherList){
+    combinationList.showStructure();
+    otherList.showStructure();
+    if(combinationList.isIntersection(otherList)){
+        cout << "Intersection found." << endl;
+    } else {
+        cout << "Intersection not found." << endl;
+    }
+}

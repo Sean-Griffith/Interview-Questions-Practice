@@ -42,6 +42,8 @@ class List {
         void partition(const DataType& value);
         int sumLists(List& other);
         bool isPalindrome();
+        void generateCombinedList(const List<DataType>& list1, const List<DataType>& list2);
+        bool isIntersection(List<DataType>& otherList);
 
     private:
         class ListNode {
@@ -506,6 +508,49 @@ bool List<DataType>::isPalindrome(){
         }
     } 
     return true;
+}
+
+template <typename DataType>
+void List<DataType>::generateCombinedList(const List<DataType>& list1, const List<DataType>& list2){
+    if(!isEmpty()){
+        throw logic_error("Cannot generate combined list from non-empty list.");
+    }
+
+    m_head = list1.m_head;
+    gotoBeginning();
+    while(gotoNext());
+    m_cursor->m_next = list2.m_head;
+    gotoBeginning();
+}
+
+template <typename DataType>
+bool List<DataType>::isIntersection(List<DataType>& otherList){
+    if(isEmpty() || otherList.isEmpty()){
+        return false;
+    }
+    
+    int thisListLength = 0;
+    gotoBeginning();
+    while(m_cursor->m_next){
+        thisListLength++;
+        gotoNext();
+    }
+
+    int otherListLength = 0;
+    otherList.gotoBeginning();
+    while(otherList.m_cursor->m_next){
+        otherListLength++;
+        otherList.gotoNext();
+    }
+    
+    //cout << "This: " << thisListLength << "\nOther: " << otherListLength << endl;
+    //showStructure();
+    //otherList.showStructure();
+    //cout << &m_cursor->m_dataItem << " =?= " << &otherList.m_cursor->m_dataItem << endl;
+    if(&m_cursor->m_dataItem == &otherList.m_cursor->m_dataItem){
+        return true;
+    }
+    return false;
 }
 
 #endif
