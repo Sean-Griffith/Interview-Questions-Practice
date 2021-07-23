@@ -483,7 +483,29 @@ int List<DataType>::sumLists(List& other){
 
 template <typename DataType>
 bool List<DataType>::isPalindrome(){
-    return false;
+    if(isEmpty()){
+        return false;
+    }
+    map<DataType,int> counter;
+    ListNode* tmp = m_head;
+    while(tmp){
+        counter[tmp->m_dataItem]++;
+        tmp = tmp->m_next;
+    }
+
+    bool oddFound = false;
+    for (const auto &it : counter){
+        if(it.second > 2){
+            return false;
+        } else if(it.second == 1){
+            if(oddFound){
+                return false;
+            } else {
+                oddFound = true;
+            }
+        }
+    } 
+    return true;
 }
 
 #endif
