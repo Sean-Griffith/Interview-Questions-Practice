@@ -43,7 +43,7 @@ class List {
         int sumLists(List& other);
         bool isPalindrome();
         void generateCombinedList(const List<DataType>& list1, const List<DataType>& list2);
-        bool isIntersection(List<DataType>& otherList);
+        List isIntersection(List<DataType>& otherList);
 
     private:
         class ListNode {
@@ -524,9 +524,10 @@ void List<DataType>::generateCombinedList(const List<DataType>& list1, const Lis
 }
 
 template <typename DataType>
-bool List<DataType>::isIntersection(List<DataType>& otherList){
+List<DataType> List<DataType>::isIntersection(List<DataType>& otherList){
+    List<DataType> intersection_list;
     if(isEmpty() || otherList.isEmpty()){
-        return false;
+        return intersection_list;
     }
     
     int thisListLength = 0;
@@ -548,9 +549,20 @@ bool List<DataType>::isIntersection(List<DataType>& otherList){
     //otherList.showStructure();
     //cout << &m_cursor->m_dataItem << " =?= " << &otherList.m_cursor->m_dataItem << endl;
     if(&m_cursor->m_dataItem == &otherList.m_cursor->m_dataItem){
-        return true;
+        int lengthDiff = abs(thisListLength-otherListLength);
+
+        gotoBeginning();
+        for(int i = 0; i < lengthDiff && m_cursor->m_next; i++){
+            //showStructure();
+            gotoNext();
+        }
+
+        intersection_list.m_head = m_cursor;
+        intersection_list.m_cursor = m_cursor;
+
+        return intersection_list;
     }
-    return false;
+    return intersection_list;
 }
 
 #endif
