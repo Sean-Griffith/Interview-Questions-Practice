@@ -89,7 +89,7 @@ List<DataType>::List(const List& other){
 
 template <typename DataType>
 List<DataType>& List<DataType>::operator=(const List& other){
-    if(other == this){
+    if(&other == this){
         return *this;
     } else {
         m_head = NULL;
