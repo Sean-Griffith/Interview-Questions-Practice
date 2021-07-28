@@ -44,6 +44,8 @@ class List {
         bool isPalindrome();
         void generateCombinedList(const List<DataType>& list1, const List<DataType>& list2);
         List isIntersection(List<DataType>& otherList);
+        void loopList(int offset);
+        bool isLooped();
 
     private:
         class ListNode {
@@ -544,10 +546,6 @@ List<DataType> List<DataType>::isIntersection(List<DataType>& otherList){
         otherList.gotoNext();
     }
     
-    //cout << "This: " << thisListLength << "\nOther: " << otherListLength << endl;
-    //showStructure();
-    //otherList.showStructure();
-    //cout << &m_cursor->m_dataItem << " =?= " << &otherList.m_cursor->m_dataItem << endl;
     if(&m_cursor->m_dataItem == &otherList.m_cursor->m_dataItem){
         int lengthDiff = abs(thisListLength-otherListLength);
 
@@ -563,6 +561,50 @@ List<DataType> List<DataType>::isIntersection(List<DataType>& otherList){
         return intersection_list;
     }
     return intersection_list;
+}
+
+template <typename DataType>
+void List<DataType>::loopList(int offset){
+    ListNode* loopStart = m_head;
+    for(int i = 0; i < offset && loopStart->m_next; i++){
+        loopStart = loopStart->m_next;
+    }
+    gotoEnd();
+    m_cursor->m_next = loopStart;
+}
+
+template <typename DataType>
+bool List<DataType>::isLooped(){
+    if(isEmpty() || !m_head->m_next){
+        return false;
+    }
+    ListNode* slow = m_head;
+    ListNode* fast = m_head;
+
+    while(slow->m_next && fast->m_next && fast->m_next->m_next){
+        //cout << slow->m_dataItem << " =?= " << fast->m_dataItem << endl;
+        if(&slow->m_dataItem == &fast->m_dataItem && fast != m_head){
+            // Find the start of the loop by walking through pre-loop 
+            // elements until meeting prior pointer
+
+            slow = m_head;
+            while(slow->m_next && fast->m_next){
+                //cout << slow->m_dataItem << " !=?=! " << fast->m_dataItem << endl;
+                if(&fast->m_dataItem == &slow->m_dataItem){
+                    cout << fast->m_dataItem << " at address " << &fast->m_dataItem << " is the start of a loop." << endl;
+                    return true;
+                }
+
+                fast = fast->m_next;
+                slow = slow->m_next;
+            }
+ 
+        } else {
+            slow = slow->m_next;
+            fast = fast->m_next->m_next;
+        }
+    }
+    return false;
 }
 
 #endif
