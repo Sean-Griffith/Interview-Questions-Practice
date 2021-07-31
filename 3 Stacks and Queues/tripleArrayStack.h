@@ -66,4 +66,14 @@ TripleArrayStack<DataType>::~TripleArrayStack(){
     delete m_array;
 }
 
+template <typename DataType>
+void TripleArrayStack<DataType>::Push(int stackNum){
+
+}
+
+template <typename DataType>
+DataType TripleArrayStack<DataType>::Pop(int stackNum){
+
+}
+
 #endif
