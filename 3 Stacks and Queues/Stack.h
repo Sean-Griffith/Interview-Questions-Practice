@@ -57,12 +57,40 @@ Stack<DataType>::Stack(){
 
 template <typename DataType>
 Stack<DataType>::Stack(const Stack& other){
-    
+    m_top = NULL;
+    StackNode* tmp = other.m_top;
+    Stack<DataType> intermediateStack;
+    while(tmp){
+        intermediateStack.Push(tmp->m_dataItem);
+        tmp = tmp->m_lowerNode;
+    }
+
+    tmp = intermediateStack.m_top;
+    while(tmp){
+        Push(tmp->m_dataItem);
+        tmp = tmp->m_lowerNode;
+    }
 }
 
 template <typename DataType>
 Stack<DataType>& Stack<DataType>::operator=(const Stack<DataType>& other){
+    if(&other == this){
+        return *this;
+    }
+    m_top = NULL;
+    StackNode* tmp = other.m_top;
+    Stack<DataType> intermediateStack;
+    while(tmp){
+        intermediateStack.Push(tmp->m_dataItem);
+        tmp = tmp->m_lowerNode;
+    }
 
+    tmp = intermediateStack.m_top;
+    while(tmp){
+        Push(tmp->m_dataItem);
+        tmp = tmp->m_lowerNode;
+    }
+    return *this;
 }
 
 template <typename DataType>
