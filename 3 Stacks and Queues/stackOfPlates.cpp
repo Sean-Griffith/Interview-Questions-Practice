@@ -14,9 +14,14 @@
     specific sub-stack.
 */
 #include <iostream>
+#include "SetOfStacks.h"
 using namespace std;
 
 int main(){
+    SetOfStacks<int> example1;
+    SetOfStacks<int> example2(5);
 
+    example1.ShowStructure();
+    example2.ShowStructure();
     return 1;
 }
