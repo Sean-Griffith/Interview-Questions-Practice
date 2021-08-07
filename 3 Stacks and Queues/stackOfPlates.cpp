@@ -15,13 +15,32 @@
 */
 #include <iostream>
 #include "SetOfStacks.h"
+#include <stack>
 using namespace std;
 
 int main(){
-    SetOfStacks<int> example1;
+    SetOfStacks<int> example1(2);
     SetOfStacks<int> example2(5);
 
     example1.ShowStructure();
     example2.ShowStructure();
+
+    example1.Push(1);
+    example1.Push(1);
+    example1.Push(1);
+    example1.Push(1);
+
+    example1.ShowStructure();
+    example2.ShowStructure();
+
+    cout << "Popping:" << example1.Pop() << endl;
+    cout << "Popping:" << example1.Pop() << endl;
+    cout << "Popping:" << example1.Pop() << endl;
+    cout << "Popping:" << example1.Pop() << endl;
+    //cout << "Popping:" << example1.Pop() << endl;
+
+    example1.ShowStructure();
+    example2.ShowStructure();
+
     return 1;
 }

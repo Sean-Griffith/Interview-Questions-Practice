@@ -15,8 +15,9 @@ class SetOfStacks {
         SetOfStacks<DataType>& operator=(const SetOfStacks& other);
         ~SetOfStacks();
 
-        void Push();
+        void Push(DataType data);
         DataType Pop();
+        bool isEmpty();
 
         void ShowStructure(int stackNumber=-1);
     private:
@@ -57,13 +58,54 @@ SetOfStacks<DataType>::~SetOfStacks(){
 }
 
 template <typename DataType>
-void SetOfStacks<DataType>::Push(){
-    
+void SetOfStacks<DataType>::Push(DataType data){
+    if(m_stackSizes[m_stackList.size()-1] >= m_threshold){
+        // Create a new stack
+        try {
+            Stack<DataType> newStack;
+            m_stackSizes[m_stackList.size()] = 0;
+            m_stackList.push_back(newStack);
+        } catch (...) {
+            cout << "" << endl;
+            throw runtime_error("Could not generate a new stack for SetOfStacks::Push");
+        }
+    }
+
+    // Add the data to the most recent stack
+    m_stackSizes[m_stackList.size()-1]++;
+    m_stackList[m_stackList.size()-1].Push(data);
 }
 
 template <typename DataType>
 DataType SetOfStacks<DataType>::Pop(){
+    if(isEmpty()){
+        throw logic_error("Cannot pop an empty SetOfStacks");
+    }
+
+    while(m_stackSizes[m_stackList.size()-1] == 0){
+        // Remove last stack if empty
+        try {
+            m_stackSizes.erase(m_stackList.size()-1);
+            m_stackList.pop_back();
+        } catch (...) {
+            cout << "" << endl;
+            throw runtime_error("Could not remove an empty stack for SetOfStacks::Pop");
+        }
+    }
     
+    // Remove data from the most recent (non-empty) stack
+    m_stackSizes[m_stackList.size()-1]--;
+    return m_stackList[m_stackList.size()-1].Pop();
+}
+
+template <typename DataType>
+bool SetOfStacks<DataType>::isEmpty(){
+    cout << m_stackSizes[0] << endl;
+    if(m_stackSizes[0] <= 0){
+        return true;
+    } else {
+        return false;
+    }
 }
 
 template <typename DataType>
