@@ -17,9 +17,11 @@ class SetOfStacks {
 
         void Push(DataType data);
         DataType Pop();
-        bool isEmpty();
+        bool isEmpty(int stackNum=0);
 
-        void ShowStructure(int stackNumber=-1);
+        DataType PopAt(int stackNum);
+
+        void ShowStructure(int stackNum=-1);
     private:
         int m_threshold;
         map<int, int> m_stackSizes;
@@ -99,8 +101,19 @@ DataType SetOfStacks<DataType>::Pop(){
 }
 
 template <typename DataType>
-bool SetOfStacks<DataType>::isEmpty(){
-    if(m_stackSizes[0] <= 0){
+DataType SetOfStacks<DataType>::PopAt(int stackNum){
+    if(isEmpty(stackNum)){
+        throw logic_error("Cannot pop from specified stack '" + to_string(stackNum) + "'");
+    }
+
+    m_stackSizes[stackNum]--;
+    return m_stackList[stackNum].Pop();
+}
+
+template <typename DataType>
+bool SetOfStacks<DataType>::isEmpty(int stackNum){
+    //cout << "Size of stack " << stackNum << ": " << m_stackSizes[stackNum] << endl;
+    if(m_stackSizes[stackNum] <= 0){
         return true;
     } else {
         return false;
@@ -108,22 +121,26 @@ bool SetOfStacks<DataType>::isEmpty(){
 }
 
 template <typename DataType>
-void SetOfStacks<DataType>::ShowStructure(int stackNumber){
+void SetOfStacks<DataType>::ShowStructure(int stackNum){
     cout << "{" << endl;
-    if(stackNumber < 0){
+    if(stackNum < 0){
         for(int i = 0; i < m_stackList.size(); i++){
             cout << "\t";
             m_stackList[i].ShowStructure();
         }
     } else {
-        if(stackNumber >= m_stackList.size()){
+        if(stackNum >= m_stackList.size()){
             // Invalid stack specified - throw error
             throw logic_error("Invalid stack requested in SetOfStacks::ShowStructure()");
         }
         // Show the structure of a specific stack
         cout << "\t";
-        m_stackList[stackNumber].ShowStructure();
+        m_stackList[stackNum].ShowStructure();
     }
+     
+     for(auto it = m_stackSizes.begin(); it != m_stackSizes.end(); it++){
+         cout << it->first << ":" << it->second << endl;
+     }
     cout << "}" << endl;
 }
 

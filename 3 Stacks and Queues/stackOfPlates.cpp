@@ -25,22 +25,45 @@ int main(){
     example1.ShowStructure();
     example2.ShowStructure();
 
-    example1.Push(1);
-    example1.Push(2);
-    example1.Push(3);
-    example1.Push(4);
+    for(int i = 0; i < 5; i++){
+        example1.Push(i);
+    }
+
+    for(int i = 0; i < 17; i++){
+        example2.Push(i);
+    }
 
     example1.ShowStructure();
     example2.ShowStructure();
 
-    cout << "Popping:" << example1.Pop() << endl;
-    cout << "Popping:" << example1.Pop() << endl;
-    cout << "Popping:" << example1.Pop() << endl;
-    cout << "Popping:" << example1.Pop() << endl;
+    cout << "Modifying example 1" << endl;
+    cout << "Popping: " << example1.Pop() << endl;
+    cout << "Popping: " << example1.Pop() << endl;
+    cout << "Popping: " << example1.Pop() << endl;
+    cout << "Popping: " << example1.Pop() << endl;
     //cout << "Popping:" << example1.Pop() << endl;
 
+    cout << "Modifying example 2" << endl;
+    cout << "Popping: " << example2.Pop() << endl;
+    cout << "Popping from 1st stack: " << example2.PopAt(1) << endl;
+
     example1.ShowStructure();
     example2.ShowStructure();
+
+    SetOfStacks<int> example3(3);
+    for(int i = 0; i < 7; i++){
+        example3.Push(i);
+    }
+    example3.ShowStructure();
+
+    cout << "Modifying example 2" << endl;
+    cout << "Popping from 1st stack: " << example3.PopAt(1) << endl;
+    cout << "Popping from 1st stack: " << example3.PopAt(1) << endl;
+    cout << "Popping from 1st stack: " << example3.PopAt(1) << endl;
+    cout << "Popping: " << example3.Pop() << endl;
+    cout << "Popping: " << example3.Pop() << endl;
+
+    example3.ShowStructure();
 
     return 1;
 }
