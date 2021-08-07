@@ -20,6 +20,7 @@ class Stack {
 
         void Push(DataType myData);
         DataType Pop();
+        DataType Peek();
         DataType GetMinimum() const;
 
         void ShowStructure() const;
@@ -130,6 +131,15 @@ DataType Stack<DataType>::Pop(){
     DataType topData = oldTop->m_dataItem;
     delete(oldTop);
     return topData;
+}
+
+template <typename DataType>
+DataType Stack<DataType>::Peek(){
+    if(isEmpty()){
+        throw logic_error("Cannot Peek empty stack!")
+    }
+    
+    return m_top->m_dataItem;
 }
 
 template <typename DataType>
