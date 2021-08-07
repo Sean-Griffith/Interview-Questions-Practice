@@ -125,6 +125,9 @@ void Stack<DataType>::Push(DataType myData){
 
 template <typename DataType>
 DataType Stack<DataType>::Pop(){
+    if(isEmpty()){
+        throw logic_error("Cannot pop element from empty stack");
+    }
     StackNode* oldTop = m_top;
     m_top = m_top->m_lowerNode;
 
@@ -136,7 +139,7 @@ DataType Stack<DataType>::Pop(){
 template <typename DataType>
 DataType Stack<DataType>::Peek(){
     if(isEmpty()){
-        throw logic_error("Cannot Peek empty stack!")
+        throw logic_error("Cannot Peek empty stack!");
     }
     
     return m_top->m_dataItem;
