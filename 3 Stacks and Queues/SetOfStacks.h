@@ -100,7 +100,6 @@ DataType SetOfStacks<DataType>::Pop(){
 
 template <typename DataType>
 bool SetOfStacks<DataType>::isEmpty(){
-    cout << m_stackSizes[0] << endl;
     if(m_stackSizes[0] <= 0){
         return true;
     } else {

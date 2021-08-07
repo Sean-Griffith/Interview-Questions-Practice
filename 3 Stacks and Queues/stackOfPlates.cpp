@@ -26,9 +26,9 @@ int main(){
     example2.ShowStructure();
 
     example1.Push(1);
-    example1.Push(1);
-    example1.Push(1);
-    example1.Push(1);
+    example1.Push(2);
+    example1.Push(3);
+    example1.Push(4);
 
     example1.ShowStructure();
     example2.ShowStructure();
