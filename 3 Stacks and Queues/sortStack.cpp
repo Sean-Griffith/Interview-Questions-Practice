@@ -5,6 +5,7 @@
     The stack supports the following operations: push, pop, peek, and isEmpty.
 */
 #include <iostream>
+#include "SortStack.h"
 using namespace std;
 
 int main(){
