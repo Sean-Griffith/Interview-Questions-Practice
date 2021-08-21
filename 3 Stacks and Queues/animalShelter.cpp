@@ -12,6 +12,24 @@
 using namespace std;
 
 int main(){
-    
+    AnimalShelter<Dog, Cat, Animal> example;
+    Cat cat1, cat2, cat3, cat4, cat5;
+    Dog dog1, dog2, dog3, dog4, dog5;
+    example.Enqueue(cat1);
+    example.Enqueue(cat2);
+    example.Enqueue(dog1);
+    example.Enqueue(cat4);
+    example.Enqueue(dog2);
+    example.Enqueue(dog3);
+    example.Enqueue(dog4);
+    example.Enqueue(cat3);
+    example.Enqueue(dog5);
+    example.Enqueue(cat5);
+    cout << example.DequeueCat().m_arrivalOrder << endl;
+    cout << example.Dequeue().m_arrivalOrder << endl;
+    cout << example.Dequeue().m_arrivalOrder << endl;
+    cout << example.DequeueDog().m_arrivalOrder << endl;
+    cout << example.DequeueCat().m_arrivalOrder << endl;
+
     return 1;
 }
