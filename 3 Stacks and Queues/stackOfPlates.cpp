@@ -19,6 +19,27 @@
 using namespace std;
 
 int main(){
+    /* 
+        Pop
+        O(1) time complexity
+        O(n) space complexity
+        Whenver the latest stack is empty, remove it and return to
+        the previous stack. Once a stack with an element is found, 
+        return the element.
+
+        Push
+        O(1) time complexity
+        O(1) space complexity
+        Whenever the latest stack exceeds the threshold, make a new 
+        stack and insert the element there. 
+
+        PopAt
+        O(1) time complexity
+        O(1) space complexity
+        Use an arraylist to hold a set of stacks, remove 
+        the element from the index desired (if not empty). Cleanup
+        of stacks emptied via this method is done by Pop.
+    */
     SetOfStacks<int> example1(2);
     SetOfStacks<int> example2(5);
 

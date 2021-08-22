@@ -22,6 +22,35 @@ int main(){
     return 1;
 }
 
+/* 
+    O(n^2) time complexity
+    O(n) space complexity
+
+    Pop an element from unsorted stack and store in temporary variable,
+    pop elements from sorted stack until a smaller element than the temporary variable
+    is found, then push it to that stack. Repeat until unsorted stack is empty.
+
+    Time complexity is n^2 in the case where all elements are sorted high->low, as each
+    sort requires the sorted stack to be moved back to the unsorted stack and then
+    replaced onto the sorted stack following insertion of the new element.
+
+    E.G.
+    U: 5 4 3 2 1 | S:       | T: NULL
+    U: 4 3 2 1   | S:       | T: 5
+    U: 4 3 2 1   | S: 5     | T: NULL
+    U: 3 2 1     | S: 5     | T: 4
+    U: 5 3 2 1   | S: 4     | T: NULL
+    U: 3 2 1     | S: 4     | T: 5
+    U: 3 2 1     | S: 5 4   | T: NULL
+    U: 2 1       | S: 5 4   | T: 3
+    U: 5 2 1     | S: 4     | T: 3
+    U: 4 5 2 1   | S: 3     | T: NULL
+    U: 5 2 1     | S: 3     | T: 4
+    U: 5 2 1     | S: 4 3   | T: NULL
+    U: 2 1       | S: 4 3   | T: 5
+    U: 2 1       | S: 5 4 3 | T: NULL
+    ... etc
+*/
 Stack<int> sortStack(Stack<int>& unsorted){
 
     if(unsorted.isEmpty()){

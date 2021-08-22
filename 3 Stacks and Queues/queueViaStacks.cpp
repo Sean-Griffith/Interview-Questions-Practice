@@ -6,6 +6,28 @@
 using namespace std;
 
 int main(){
+
+    /* 
+        Add
+        O(n) time complexity
+        O(1) space complexity
+        If the last operation was Remove(), the output stack must 
+        be moved to the input stack (O(n)). Otherwise O(1).
+
+        Remove
+        O(n) time complexity
+        O(1) space complexity
+        If the last operation was Add(), the input stack must 
+        be moved to the output stack (O(n)). Otherwise O(1).
+
+        Peek
+        O(n) time complexity
+        O(1) space complexity
+        If the last operation was Add(), the input stack must 
+        be moved to the output stack (O(n)). Otherwise O(1).
+        
+    */
+
     StackQueue<int> example1;
     //example1.Remove();
     example1.Add(1);
