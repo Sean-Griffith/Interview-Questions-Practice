@@ -2,7 +2,6 @@
 #define ANIMALSHELTER_H
 
 #include "Queue.h"
-#include <typeinfo>
 using namespace std;
 
 class Animal {
