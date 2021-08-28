@@ -41,6 +41,15 @@ int main(){
     example.InsertEdge(e7);
     
     example.ListEdges();
+
+    /* 
+        O(n) time complexity
+        O(n) space complexity
+
+        A route between two nodes can be found by performing BFS or DFS node traversal. 
+        For this solution, I utilized BFS traversal to avoid going down one branch in depth
+        before moving onto other neighboring nodes.
+    */
     if(example.isPath(0, 1)){
         cout << "Found a path between the nodes!" << endl;
     } else {
