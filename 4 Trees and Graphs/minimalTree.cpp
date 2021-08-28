@@ -5,9 +5,10 @@
 */
 
 #include <iostream>
+#include "BST.h"
 using namespace std;
 
 int main(){
-
+    int arr[7] = {-44, 13, 17, 32, 51, 88, 201};
     return 1;
 }
