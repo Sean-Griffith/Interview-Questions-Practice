@@ -4,12 +4,14 @@
 #include <iostream>
 #include <stdexcept>
 #include <vector>
+#include "Queue.h"
 using namespace std;
 
 template <typename DataType>
 struct Node {
     DataType m_data;
     int m_id = -1;
+    bool visited = false;
 };
 
 struct Edge {
@@ -27,6 +29,9 @@ class Graph {
 
         void InsertNode(Node<DataType>& newNode);
         void InsertEdge(Edge newEdge);
+
+        bool isPath(int node1, int node2);
+        void visitNode(Node<DataType> myNode);
 
         void NodeDetails(int nodeId) const;
         void ListEdges() const;
@@ -98,6 +103,45 @@ void Graph<DataType>::ListEdges() const {
     for(int i = 0; i < m_adjacencyList.size(); i++){
         NodeDetails(i);
     }
+}
+
+template <typename DataType>
+bool Graph<DataType>::isPath(int node1, int node2){
+    if(node1 >= m_adjacencyList.size() || node1 < 0 ||
+       node2 >= m_adjacencyList.size() || node2 < 0){
+        return false;
+    }
+    // Check if a path exists between node1 and node2
+    Queue<Node<DataType>> queueBFS;
+
+    // Mark starting node, add to queue
+    m_nodeList[node1].visited = true;
+    queueBFS.Enqueue(m_nodeList[node1]);
+
+    while(!queueBFS.isEmpty()){
+        // Visit current node, add edge nodes to queue if not visited
+        Node<DataType> currNode = queueBFS.Dequeue();
+        visitNode(currNode);
+        if(currNode.m_id == node2){
+            return true;
+        }
+        
+        for(int i = 0; i < m_adjacencyList[currNode.m_id].size(); i++){
+            int neighborId = m_adjacencyList[currNode.m_id][i].end;
+            Node<DataType> neighborNode = m_nodeList[neighborId];
+            if(!neighborNode.visited){
+                cout << "Queued: Node" << neighborId << endl;
+                queueBFS.Enqueue(neighborNode);
+                m_nodeList[neighborNode.m_id].visited = true;
+            }
+        }
+    }
+    return false;
+}
+
+template <typename DataType>
+void Graph<DataType>::visitNode(Node<DataType> myNode){
+    cout << "Visited: Node " << myNode.m_id << endl;
 }
 
 #endif
