@@ -1,5 +1,5 @@
-#ifndef ANIMALSHELTER_H
-#define ANIMALSHELTER_H
+#ifndef GRAPH_H
+#define GRAPH_H
 
 #include <iostream>
 #include <stdexcept>
