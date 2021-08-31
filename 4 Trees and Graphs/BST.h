@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <stdexcept>
+#include "LinkedList.h"
 using namespace std;
 
 template <typename DataType>
@@ -23,8 +24,11 @@ class BST {
         void InOrder() const;
         void PostOrder() const;
 
+        int GetDepth() const;
+        List<List<DataType>> ListOfDepths() const;
+
         void ShowStructure();
-    protected:
+    private:
         class BinaryNode{
             public:
                 BinaryNode(DataType data, BinaryNode* left=NULL, BinaryNode* right=NULL){
@@ -38,6 +42,7 @@ class BST {
         };
         void InsertHelper(DataType value, BinaryNode*& currNode);
         void ShowHelper(BinaryNode* currNode, int depth);
+        int DepthHelper(BinaryNode* currNode) const;
         BinaryNode* m_root;
 };
 
@@ -144,6 +149,24 @@ void BST<DataType>::ShowHelper(BinaryNode* currNode, int depth){
     }
     cout << endl;
     ShowHelper(currNode->m_left, depth+1);
+}
+
+template <typename DataType>
+int BST<DataType>::GetDepth() const {
+    return DepthHelper(m_root);
+}
+
+template <typename DataType>
+int BST<DataType>::DepthHelper(BinaryNode* currNode) const {
+    if(!currNode){
+        return 0;
+    } 
+    return 1 + max(DepthHelper(currNode->m_left), DepthHelper(currNode->m_right));
+}
+
+template <typename DataType>
+List<List<DataType>> BST<DataType>::ListOfDepths() const {
+
 }
 
 #endif
