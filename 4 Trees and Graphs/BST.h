@@ -3,7 +3,8 @@
 
 #include <iostream>
 #include <stdexcept>
-#include "LinkedList.h"
+#include <list>
+#include <vector>
 using namespace std;
 
 template <typename DataType>
@@ -25,7 +26,7 @@ class BST {
         void PostOrder() const;
 
         int GetDepth() const;
-        List<List<DataType>> ListOfDepths() const;
+        vector<list<DataType>> ListOfDepths() const;
 
         void ShowStructure();
     private:
@@ -43,6 +44,7 @@ class BST {
         void InsertHelper(DataType value, BinaryNode*& currNode);
         void ShowHelper(BinaryNode* currNode, int depth);
         int DepthHelper(BinaryNode* currNode) const;
+        void ListOfDepthsHelper(BinaryNode* currNode, int depth, vector<list<DataType>>& depthLists) const;
         BinaryNode* m_root;
 };
 
@@ -165,8 +167,24 @@ int BST<DataType>::DepthHelper(BinaryNode* currNode) const {
 }
 
 template <typename DataType>
-List<List<DataType>> BST<DataType>::ListOfDepths() const {
+vector<list<DataType>> BST<DataType>::ListOfDepths() const {
+    vector<list<DataType>> depthLists;
+    for(int i = 0; i < GetDepth(); i++){
+        list<DataType> currLayerList;
+        depthLists.push_back(currLayerList);
+    }
+    ListOfDepthsHelper(m_root, 0, depthLists);
+    return depthLists;
+}
 
+template <typename DataType>
+void BST<DataType>::ListOfDepthsHelper(BinaryNode* currNode, int depth, vector<list<DataType>>& depthLists) const {
+    if(!currNode){
+        return;
+    }
+    ListOfDepthsHelper(currNode->m_left, depth+1, depthLists);
+    ListOfDepthsHelper(currNode->m_right, depth+1, depthLists);
+    depthLists[depth].push_back(currNode->m_data);
 }
 
 #endif

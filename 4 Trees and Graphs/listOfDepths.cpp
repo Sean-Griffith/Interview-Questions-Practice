@@ -15,6 +15,24 @@ int main(){
     BST<int> solution = ArrayToBST(example, 15);
     solution.ShowStructure();
     cout << "Tree has a depth of: " << solution.GetDepth() << endl;
+
+    /*
+        O(n) Time complexity
+        O(n) Space complexity
+
+        A list is created for all nodes at each depth by traversing the 
+        tree and inserting nodes as they are accessed to the list corresponding
+        to their depth, and then recursively calling the function at the next depth
+        (depth+1).
+    */
+    vector<list<int>> depthsList = solution.ListOfDepths();
+    for(int i = 0; i < depthsList.size(); i++){
+        cout << "List for depth " << i << endl;
+        for(list<int>::iterator it = depthsList[i].begin(); it != depthsList[i].end(); it++){
+            cout << *it << " ";
+        }
+        cout << endl;
+    }
     return 1;
 }
 
