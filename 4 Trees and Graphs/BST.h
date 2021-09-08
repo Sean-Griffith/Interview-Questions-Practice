@@ -27,6 +27,7 @@ class BST {
 
         int GetDepth() const;
         vector<list<DataType>> ListOfDepths() const;
+        bool isBalanced() const;
 
         void ShowStructure();
     private:
@@ -45,6 +46,7 @@ class BST {
         void ShowHelper(BinaryNode* currNode, int depth);
         int DepthHelper(BinaryNode* currNode) const;
         void ListOfDepthsHelper(BinaryNode* currNode, int depth, vector<list<DataType>>& depthLists) const;
+        int isBalancedHelper(BinaryNode* currNode) const;
         BinaryNode* m_root;
 };
 
@@ -185,6 +187,35 @@ void BST<DataType>::ListOfDepthsHelper(BinaryNode* currNode, int depth, vector<l
     ListOfDepthsHelper(currNode->m_left, depth+1, depthLists);
     ListOfDepthsHelper(currNode->m_right, depth+1, depthLists);
     depthLists[depth].push_back(currNode->m_data);
+}
+
+template <typename DataType>
+bool BST<DataType>::isBalanced() const {
+    int heightDiff = isBalancedHelper(m_root);
+    cout << "Height Diff: " << heightDiff << endl;
+    if(heightDiff == -1){
+        return false;
+    } else {
+        return true;
+    }
+}
+
+template <typename DataType>
+int BST<DataType>::isBalancedHelper(BinaryNode* currNode) const {
+    if(!currNode){
+        return 0;
+    }
+    
+    int leftHeight = isBalancedHelper(currNode->m_left);
+    int rightHeight = isBalancedHelper(currNode->m_right);
+    cout << "Current Node: " << currNode->m_data << " LH: " << leftHeight << " RH: " << rightHeight << endl;
+    if(abs(leftHeight - rightHeight) <= 1 && leftHeight != -1 && rightHeight != -1){  
+        int totalHeight = 1 + max(leftHeight, rightHeight);
+        return totalHeight;
+    } else {
+        //cout << "Unbalanced tree!" << endl;
+        return -1;
+    }
 }
 
 #endif
