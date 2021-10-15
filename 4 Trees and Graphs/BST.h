@@ -29,25 +29,32 @@ class BST {
         vector<list<DataType>> ListOfDepths() const;
         bool isBalanced() const;
         bool isValidBST() const;
+        DataType FindSuccessor(DataType value) const;
+        
 
         void ArrayToBST(const int* arr, int size);
         void ArrayToMinBST(const int* arr, int size);
 
         void ShowStructure();
+        
     private:
         class BinaryNode{
             public:
-                BinaryNode(DataType data, BinaryNode* left=NULL, BinaryNode* right=NULL){
+                BinaryNode(DataType data, BinaryNode* parent, BinaryNode* left=NULL, BinaryNode* right=NULL){
                     m_data = data;
+                    m_parent = parent;
                     m_left = left;
                     m_right = right;
                 }
                 BinaryNode* m_left;
                 BinaryNode* m_right;
+                BinaryNode* m_parent;
                 DataType m_data;
         };
 
-        void InsertHelper(DataType value, BinaryNode*& currNode);
+        BinaryNode* FindNode(DataType value) const;
+        void FindNodeHelper(BinaryNode* currNode, DataType value, BinaryNode*& foundNode) const;
+        void InsertHelper(DataType value, BinaryNode*& currNode, BinaryNode*& parentNode);
         void ShowHelper(BinaryNode* currNode, int depth);
         int DepthHelper(BinaryNode* currNode) const;
         void ListOfDepthsHelper(BinaryNode* currNode, int depth, vector<list<DataType>>& depthLists) const;
@@ -87,19 +94,24 @@ void BST<DataType>::Clear(){
 
 template <typename DataType>
 void BST<DataType>::Insert(DataType value){
-    InsertHelper(value, m_root);
+    if(m_root == NULL){
+        m_root = new BinaryNode(value, NULL);
+    } else {
+        InsertHelper(value, m_root, m_root);
+    }
 }
 
 template <typename DataType>
-void BST<DataType>::InsertHelper(DataType value, BinaryNode*& currNode){
+void BST<DataType>::InsertHelper(DataType value, BinaryNode*& currNode, BinaryNode*& parentNode){
     if(currNode == NULL){
-        currNode = new BinaryNode(value);
+        cout << "Inserting " << value << " with parent " << parentNode->m_data << endl;
+        currNode = new BinaryNode(value, parentNode);
         return;
     }
     if(currNode->m_data >= value){
-        InsertHelper(value, currNode->m_left);
+        InsertHelper(value, currNode->m_left, currNode);
     } else {
-        InsertHelper(value, currNode->m_right);
+        InsertHelper(value, currNode->m_right, currNode);
     }
 }
 
@@ -237,7 +249,10 @@ bool BST<DataType>::isValidBSTHelper(BinaryNode* currNode, int min, int max) con
         // Leaf node or empty tree
         return true;
     }
-    cout << currNode->m_data << endl;
+    if(currNode->m_parent){
+        cout << currNode->m_parent->m_data << endl;
+    }
+    
     // Traverse Left with current node as max value
     if(!isValidBSTHelper(currNode->m_left, min, currNode->m_data)){
         return false;
@@ -254,6 +269,66 @@ bool BST<DataType>::isValidBSTHelper(BinaryNode* currNode, int min, int max) con
     }
 
     return true;
+}
+
+template <typename DataType>
+DataType BST<DataType>::FindSuccessor(DataType value) const{
+    // Find the node indicated by value
+    BinaryNode* queryNode = FindNode(value);
+    // Check for right subtree - if found, return leftmost node in subtree
+    // else - go to parent nodes until approaching parent from left child
+    if(queryNode->m_right){
+        // Travel down left path until leaf found
+        queryNode = queryNode->m_right;
+        while(queryNode->m_left){
+            queryNode = queryNode->m_left;
+        }
+    } else {
+        BinaryNode* child = queryNode;
+        queryNode = queryNode->m_parent;
+        
+        while(child != queryNode->m_left){
+            if(queryNode != m_root){
+                child = queryNode;
+                queryNode = queryNode->m_parent;
+            } else {
+                throw logic_error("Node has no in-order successor");
+            }
+        }
+    }
+    
+
+    // if value was right node, repeat until travelling to parent from left
+
+    // if never travelled to parent from left, value was rightmost node in tree
+    return queryNode->m_data;
+}
+
+template <typename DataType>
+typename BST<DataType>::BinaryNode* BST<DataType>::FindNode(DataType value) const {
+    BinaryNode* foundNode = NULL;
+    FindNodeHelper(m_root, value, foundNode);
+    if(foundNode){
+        return foundNode;
+    } else {
+        throw logic_error("Could not find specified node.");
+    }
+}
+
+template <typename DataType>
+void BST<DataType>::FindNodeHelper(BinaryNode* currNode, DataType value, BinaryNode*& foundNode) const {
+    if(!currNode){
+        return;
+    }
+    if(currNode->m_data == value){
+        foundNode = currNode;
+    } else {
+        if(currNode->m_data < value){
+            FindNodeHelper(currNode->m_right, value, foundNode);
+        } else {
+            FindNodeHelper(currNode->m_left, value, foundNode);
+        }
+    }
 }
 
 template <typename DataType>
