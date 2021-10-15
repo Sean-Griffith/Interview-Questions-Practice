@@ -28,6 +28,10 @@ class BST {
         int GetDepth() const;
         vector<list<DataType>> ListOfDepths() const;
         bool isBalanced() const;
+        bool isValidBST() const;
+
+        void ArrayToBST(const int* arr, int size);
+        void ArrayToMinBST(const int* arr, int size);
 
         void ShowStructure();
     private:
@@ -42,11 +46,15 @@ class BST {
                 BinaryNode* m_right;
                 DataType m_data;
         };
+
         void InsertHelper(DataType value, BinaryNode*& currNode);
         void ShowHelper(BinaryNode* currNode, int depth);
         int DepthHelper(BinaryNode* currNode) const;
         void ListOfDepthsHelper(BinaryNode* currNode, int depth, vector<list<DataType>>& depthLists) const;
         int isBalancedHelper(BinaryNode* currNode) const;
+        bool isValidBSTHelper(BinaryNode* currNode, int min, int max) const;
+        void ArrayToMinBSTHelper(const int* p, int size);
+
         BinaryNode* m_root;
 };
 
@@ -215,6 +223,68 @@ int BST<DataType>::isBalancedHelper(BinaryNode* currNode) const {
     } else {
         //cout << "Unbalanced tree!" << endl;
         return -1;
+    }
+}
+
+template <typename DataType>
+bool BST<DataType>::isValidBST() const {
+    return isValidBSTHelper(m_root, INT_MIN, INT_MAX);
+}
+
+template <typename DataType>
+bool BST<DataType>::isValidBSTHelper(BinaryNode* currNode, int min, int max) const {
+    if(!currNode){
+        // Leaf node or empty tree
+        return true;
+    }
+    cout << currNode->m_data << endl;
+    // Traverse Left with current node as max value
+    if(!isValidBSTHelper(currNode->m_left, min, currNode->m_data)){
+        return false;
+    }
+
+    // Compare current node with min/max values to check for validity
+    if(currNode->m_data <= min || currNode->m_data > max){
+        return false;
+    }
+
+    // Traverse Right with current node as min value
+    if(!isValidBSTHelper(currNode->m_right, currNode->m_data, max)){
+        return false;
+    }
+
+    return true;
+}
+
+template <typename DataType>
+void BST<DataType>::ArrayToBST(const int* arr, int size){
+    for(int i = 0; i < size; i++){
+        Insert(arr[i]);
+    }
+}
+
+template <typename DataType>
+void BST<DataType>::ArrayToMinBST(const int* arr, int size){
+    ArrayToMinBSTHelper(arr, size);
+}
+
+template <typename DataType>
+void BST<DataType>::ArrayToMinBSTHelper(const int* p, int size){
+    if(size == 0){
+        return;
+    }
+
+    if(size%2 == 1){
+        int middle = (size+1)/2;
+
+        Insert(*(p+middle-1));
+
+        const int* q = p + middle;
+        ArrayToMinBSTHelper(q, size-middle);
+        ArrayToMinBSTHelper(p, middle-1);
+    } else {
+        ArrayToMinBSTHelper(p+1, size-1);
+        Insert(*p);
     }
 }
 
