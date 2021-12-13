@@ -7,11 +7,16 @@
 #include "Queue.h"
 using namespace std;
 
+#define UNVISITED 0
+#define VISITED -1
+#define BUILT 1
+
 template <typename DataType>
 struct Node {
     DataType m_data;
     int m_id = -1;
-    bool visited = false;
+    // States: 0 = unvisited, -1 = touched, 1 = visited
+    int state = 0;
 };
 
 struct Edge {
@@ -35,7 +40,10 @@ class Graph {
 
         void NodeDetails(int nodeId) const;
         void ListEdges() const;
+
+        vector<DataType> OrderDependencies();
     private:
+        bool OrderDependenciesHelper(Node<DataType>& currNode, vector<DataType>& order);
         vector<vector<Edge>> m_adjacencyList;
         vector<Node<DataType>> m_nodeList;
 };
@@ -47,8 +55,13 @@ Graph<DataType>::Graph(){
 
 template <typename DataType>
 Graph<DataType>::Graph(const Graph& other){
+    // Copy over edges
     for(int i = 0; i < other.m_adjacencyList.size(); i++){
         m_adjacencyList.push_back(other.m_adjacencyList[i]);
+    }
+    // Copy over nodes
+    for(int i = 0; i < other.m_nodeList.size(); i++){
+        m_nodeList.push_back(other.m_nodeList[i]);
     }
 }
 
@@ -58,8 +71,13 @@ Graph<DataType>& Graph<DataType>::operator=(const Graph& other){
         return *this;
     }
     m_adjacencyList.clear();
+    // Copy over edges
     for(int i = 0; i < other.m_adjacencyList.size(); i++){
         m_adjacencyList.push_back(other.m_adjacencyList[i]);
+    }
+    // Copy over nodes
+    for(int i = 0; i < other.m_nodeList.size(); i++){
+        m_nodeList.push_back(other.m_nodeList[i]);
     }
     return *this;
 }
@@ -141,7 +159,48 @@ bool Graph<DataType>::isPath(int node1, int node2){
 
 template <typename DataType>
 void Graph<DataType>::visitNode(Node<DataType> myNode){
-    cout << "Visited: Node " << myNode.m_id << endl;
+    cout << "Visited: Node " << myNode.m_data << endl;
+}
+
+template <typename DataType>
+vector<DataType> Graph<DataType>::OrderDependencies(){
+    // Assumes the start of an edge is dependent on the end of the edge
+    // For each node, first check that the node was not already visited, 
+    // then do a DFS until a node with no unvisited children
+    vector<DataType> orderedDependencies;
+    while(orderedDependencies.size() < m_nodeList.size()){
+        for(int i = 0; i < m_nodeList.size(); i++){
+            if(!OrderDependenciesHelper(m_nodeList[i], orderedDependencies)){
+                throw runtime_error("Cycle detected, cannot build project.");
+            }
+        }
+    }
+    return orderedDependencies;
+}
+
+template <typename DataType>
+bool Graph<DataType>::OrderDependenciesHelper(Node<DataType>& currNode, vector<DataType>& order){
+    // If node is built or was touched, return false
+    if(currNode.state == VISITED){
+        return false;
+    }
+    cout << "Ordering " << currNode.m_data << endl;
+    // Go to each dependency and build before this node (DFS)
+    if(currNode.state == UNVISITED){
+        visitNode(currNode);
+        currNode.state = VISITED;
+        // Check all dependencies first
+        for(int i = 0; i < m_adjacencyList[currNode.m_id].size(); i++){
+            int dependentID = m_adjacencyList[currNode.m_id][i].end;
+            if(!OrderDependenciesHelper(m_nodeList[dependentID], order)){
+                return false;
+            }
+        }
+        cout << "Built " << currNode.m_data << endl;
+        currNode.state = BUILT;
+        order.push_back(currNode.m_data);
+    }
+    return true;
 }
 
 #endif
