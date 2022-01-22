@@ -31,6 +31,7 @@ class BST {
         bool isValidBST() const;
         DataType FindSuccessor(DataType value) const;
         
+        vector<list<DataType>*>* GenerateArraySequences();
 
         void ArrayToBST(const int* arr, int size);
         void ArrayToMinBST(const int* arr, int size);
@@ -61,6 +62,9 @@ class BST {
         int isBalancedHelper(BinaryNode* currNode) const;
         bool isValidBSTHelper(BinaryNode* currNode, int min, int max) const;
         void ArrayToMinBSTHelper(const int* p, int size);
+        vector<list<DataType>*>* ArraySequencesHelper(BinaryNode* currNode);
+        void MixSequences(list<DataType>*& start, list<DataType>*& middle, list<DataType>*& end, vector<list<DataType>*>*& sequences);
+        void printList(list<DataType>* myList);
 
         BinaryNode* m_root;
 };
@@ -361,6 +365,108 @@ void BST<DataType>::ArrayToMinBSTHelper(const int* p, int size){
         ArrayToMinBSTHelper(p+1, size-1);
         Insert(*p);
     }
+}
+
+template <typename DataType>
+vector<list<DataType>*>* BST<DataType>::GenerateArraySequences(){
+    return ArraySequencesHelper(m_root);
+}
+
+template <typename DataType>
+vector<list<DataType>*>* BST<DataType>::ArraySequencesHelper(BinaryNode* currNode){
+    vector<list<DataType>*>* result = new vector<list<DataType>*>; // DELETE
+    if(currNode == NULL){
+        list<DataType>* subResult = new list<DataType>; // DELETE
+        result->push_back(subResult);
+        return result;
+    }
+    
+    list<DataType>* startOf = new list<DataType>; // DELETE
+    startOf->push_back(currNode->m_data);
+    
+    vector<list<DataType>*>* resultLeft = ArraySequencesHelper(currNode->m_left);
+    vector<list<DataType>*>* resultRight = ArraySequencesHelper(currNode->m_right);
+
+    cout << "Tracking: " << startOf->front() << endl;
+    cout << "Subtrees: " << resultLeft->size() << " " << resultRight->size() << endl;
+
+    for(int i = 0; i < resultLeft->size(); i++){
+        for(int j = 0; j < resultRight->size(); j++){
+            vector<list<DataType>*>* sequences = new vector<list<DataType>*>;
+            list<DataType>* lRP = (*resultLeft)[i];
+            list<DataType>* rRP = (*resultRight)[j];
+            MixSequences(startOf, lRP, rRP, sequences);
+            result->insert(result->end(), sequences->begin(), sequences->end());
+        }
+    }
+
+    //cout << " Hi4 " << endl;
+    
+    return result;
+}
+
+template <typename DataType>
+void BST<DataType>::MixSequences(list<DataType>*& start, list<DataType>*& middle, list<DataType>*& end, vector<list<DataType>*>*& sequences){
+
+    /*cout << "start: ";
+    printList(start);
+    cout << "middle: ";
+    printList(middle);
+    cout << "end: ";
+    printList(end);
+    cout << endl;*/
+
+    cout << "Hi0" << endl;
+
+    if(middle->size() == 0 || end->size() == 0){
+        //cout << "Hia" << endl;
+        list<DataType>* sequence(start);
+        //cout << "Hib" << endl;
+        //sequence->merge(*middle);
+        for(auto it: *middle){
+            sequence->push_back(it);
+        }
+        //cout << "Hic" << endl;
+        //sequence->merge(*end);
+        for(auto it: *end){
+            sequence->push_back(it);
+        }
+        //cout << "Hid" << endl;
+        printList(sequence);
+        sequences->push_back(sequence);
+        //cout << "Hie" << endl;
+        return;
+    }
+
+    //cout << "Hi1, SIZES: START | MIDDLE | END" << endl;
+    //cout << start->size() << " " << middle->size() << " " << end->size() << endl;
+    
+    DataType middleTrim = middle->front();
+    middle->pop_front();
+    start->push_back(middleTrim);
+    MixSequences(start, middle, end, sequences);
+    start->pop_back();
+    middle->push_front(middleTrim);
+
+    //cout << "Hi2" << endl;
+
+    DataType endTrim = end->front();
+    end->pop_front();
+    start->push_back(endTrim);
+    MixSequences(start, middle, end, sequences);
+    start->pop_back();
+    end->push_front(endTrim);
+
+    //cout << "Hi3" << endl;
+    
+}
+
+template <typename DataType>
+void BST<DataType>::printList(list<DataType>* myList){
+    for(auto it: *myList){
+        cout << it << " ";
+    }
+    cout << endl;
 }
 
 #endif
