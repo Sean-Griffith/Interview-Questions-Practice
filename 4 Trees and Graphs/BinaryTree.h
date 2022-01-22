@@ -29,6 +29,8 @@ class BinaryTree {
         BinaryTree<DataType>& operator=(const BinaryTree<DataType>& other);
         ~BinaryTree();
 
+        void ArrayToBT(DataType* arr, int size);
+
         void clear();
         bool FindNode(BinaryNode<DataType>* qNode);
         
@@ -37,7 +39,9 @@ class BinaryTree {
         void ShowStructure();
         
     private:
+        BinaryNode<DataType>* ArrayToBTHelper(DataType* arr, int size, int index, BinaryNode<DataType>*& currNode);
         bool FNHelper(BinaryNode<DataType>* currNode, BinaryNode<DataType>* qNode);
+        void ShowHelper(BinaryNode<DataType>* currNode, int depth);
         BinaryNode<DataType>* FCAHelper(BinaryNode<DataType>* currNode, BinaryNode<DataType>* p, BinaryNode<DataType>* q);
         BinaryNode<DataType>* m_root;
 };
@@ -72,6 +76,24 @@ BinaryTree<DataType>& BinaryTree<DataType>::operator=(const BinaryTree<DataType>
 template <typename DataType>
 BinaryTree<DataType>::~BinaryTree(){
     clear();
+}
+
+template <typename DataType>
+void BinaryTree<DataType>::ArrayToBT(DataType* arr, int size){
+    ArrayToBTHelper(arr, size, 0, m_root);
+}
+
+template <typename DataType>
+BinaryNode<DataType>* BinaryTree<DataType>::ArrayToBTHelper(DataType* arr, int size, int index, BinaryNode<DataType>*& currNode){
+    if(index < size){
+        // Create node with data at index
+        currNode = new BinaryNode<DataType>(arr[index]);
+
+        // Insert Child nodes
+        currNode->m_left = ArrayToBTHelper(arr, size, index*2 + 1, currNode->m_left);
+        currNode->m_right = ArrayToBTHelper(arr, size, index*2 + 2, currNode->m_right);
+    }
+    return currNode;
 }
 
 template <typename DataType>
@@ -143,6 +165,41 @@ BinaryNode<DataType>* BinaryTree<DataType>::FCAHelper(BinaryNode<DataType>* curr
             return rResult;
         }
     }
+}
+
+template <typename DataType>
+void BinaryTree<DataType>::ShowStructure(){
+    if(m_root){
+        cout << "BST Structure" << endl;
+        ShowHelper(m_root, 0);
+        cout << endl;
+    } else {
+        cout << "Empty BST" << endl;
+    }
+}
+
+template <typename DataType>
+void BinaryTree<DataType>::ShowHelper(BinaryNode<DataType>* currNode, int depth){
+    if(!currNode){
+        return;
+    }
+    ShowHelper(currNode->m_right, depth+1);
+    // Tab over to current depth
+    for(int i = 0; i < depth; i++){
+        cout << "\t";
+    }
+    // Output current node value
+    cout << " " << currNode->m_data;
+    // Output lines to child nodes (if any)
+    if(currNode->m_right && currNode->m_left){
+        cout << "<";
+    } else if(currNode->m_right){
+        cout << "/";
+    } else if(currNode->m_left){
+        cout << "\\";
+    }
+    cout << endl;
+    ShowHelper(currNode->m_left, depth+1);
 }
 
 #endif

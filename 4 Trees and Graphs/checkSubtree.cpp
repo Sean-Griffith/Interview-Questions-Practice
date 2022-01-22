@@ -8,9 +8,17 @@
 */
 
 #include <iostream>
+#include "BinaryTree.h"
 using namespace std;
 
 int main(){
-
+    int t1arr[10] = {10,4,11,17,2,55,37,19,5,9};
+    int t2arr[4] = {10,1,2,3};
+    BinaryTree<int> T1;
+    BinaryTree<int> T2;
+    T1.ArrayToBT(t1arr, 10);
+    T2.ArrayToBT(t2arr, 4);
+    T1.ShowStructure();
+    T2.ShowStructure();
     return 1;
 }
