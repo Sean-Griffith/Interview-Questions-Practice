@@ -30,17 +30,21 @@ class BinaryTree {
         ~BinaryTree();
 
         void ArrayToBT(DataType* arr, int size);
+        string ToString();
 
         void clear();
         bool FindNode(BinaryNode<DataType>* qNode);
         
         BinaryNode<DataType>* FirstCommonAncestor(BinaryNode<DataType>* p, BinaryNode<DataType>* q);
+        bool checkSubtree(BinaryTree<DataType> subTree);
 
         void ShowStructure();
         
     private:
         BinaryNode<DataType>* ArrayToBTHelper(DataType* arr, int size, int index, BinaryNode<DataType>*& currNode);
         bool FNHelper(BinaryNode<DataType>* currNode, BinaryNode<DataType>* qNode);
+        string ToStringHelper(BinaryNode<DataType>* currNode);
+        bool SubtreeHelper(BinaryNode<DataType>* currNode, string subTreeString);
         void ShowHelper(BinaryNode<DataType>* currNode, int depth);
         BinaryNode<DataType>* FCAHelper(BinaryNode<DataType>* currNode, BinaryNode<DataType>* p, BinaryNode<DataType>* q);
         BinaryNode<DataType>* m_root;
@@ -81,6 +85,56 @@ BinaryTree<DataType>::~BinaryTree(){
 template <typename DataType>
 void BinaryTree<DataType>::ArrayToBT(DataType* arr, int size){
     ArrayToBTHelper(arr, size, 0, m_root);
+}
+
+template <typename DataType>
+string BinaryTree<DataType>::ToString(){
+    return ToStringHelper(m_root);
+}
+
+template <typename DataType>
+bool BinaryTree<DataType>::checkSubtree(BinaryTree<DataType> subTree){
+    string subTreeString = subTree.ToString();
+    return SubtreeHelper(m_root, subTreeString);
+}
+
+template <typename DataType>
+bool BinaryTree<DataType>::SubtreeHelper(BinaryNode<DataType>* currNode, string subTreeString){
+    if(currNode == NULL){
+        return false;
+    }
+    // Check left and right subtrees first (Post order traversal)
+    bool leftR = SubtreeHelper(currNode->m_left, subTreeString);
+    bool rightR = SubtreeHelper(currNode->m_right, subTreeString);
+
+    if(leftR || rightR){
+        return true;
+    }
+    // Convert current node data to string
+    string currString = to_string(currNode->m_data);
+    // Compare current nodes data to root node of subtree string
+    if(currString == subTreeString.substr(subTreeString.length() - currString.length())){
+        //If the current node matches the root of the subtree, check if match
+        if(ToStringHelper(currNode) == subTreeString){
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+template <typename DataType>
+string BinaryTree<DataType>::ToStringHelper(BinaryNode<DataType>* currNode){
+    string result;
+    if(currNode == NULL){
+        result = "X";
+    } else {
+        // String is concatenated as left branch + right branch + current node (post-order traversal)
+        string leftR = ToStringHelper(currNode->m_left);
+        string rightR = ToStringHelper(currNode->m_right);
+        result = leftR + rightR + to_string(currNode->m_data);
+    }
+    return result;
 }
 
 template <typename DataType>
