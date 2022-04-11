@@ -7,9 +7,14 @@
 */
 
 #include <iostream>
+#include "BinaryTree.h"
 using namespace std;
 
 int main(){
-
+    BinaryTree<int> example;
+    int values[9] = {10, 5, -3, 3, 2, 11, 3, -2, 1};
+    example.ArrayToBT(values, 9);
+    example.ShowStructure();
+    cout << example.PathsWithSum(8) << endl;
     return 1;
 }

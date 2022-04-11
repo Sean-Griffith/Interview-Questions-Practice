@@ -38,6 +38,8 @@ class BinaryTree {
         BinaryNode<DataType>* FirstCommonAncestor(BinaryNode<DataType>* p, BinaryNode<DataType>* q);
         bool checkSubtree(BinaryTree<DataType> subTree);
 
+        int PathsWithSum(int sum);
+
         void ShowStructure();
         
     private:
@@ -46,6 +48,8 @@ class BinaryTree {
         string ToStringHelper(BinaryNode<DataType>* currNode);
         bool SubtreeHelper(BinaryNode<DataType>* currNode, string subTreeString);
         void ShowHelper(BinaryNode<DataType>* currNode, int depth);
+        int PathsHelper(BinaryNode<DataType>* currNode, int sum);
+        int PathSumHelper(BinaryNode<DataType>* currNode, int targetSum, int currSum);
         BinaryNode<DataType>* FCAHelper(BinaryNode<DataType>* currNode, BinaryNode<DataType>* p, BinaryNode<DataType>* q);
         BinaryNode<DataType>* m_root;
 };
@@ -219,6 +223,50 @@ BinaryNode<DataType>* BinaryTree<DataType>::FCAHelper(BinaryNode<DataType>* curr
             return rResult;
         }
     }
+}
+
+template <typename DataType>
+int BinaryTree<DataType>::PathsWithSum(int sum){
+    return PathsHelper(m_root, sum);
+}
+
+template <typename DataType>
+int BinaryTree<DataType>::PathsHelper(BinaryNode<DataType>* currNode, int sum){
+    if(currNode == NULL){
+        return 0;
+    }
+
+    // Check for paths with sum from current node
+    int numPaths = PathSumHelper(currNode, sum, 0);
+
+    // Repeat for left and right nodes
+    numPaths += PathsHelper(currNode->m_left, sum);
+    numPaths += PathsHelper(currNode->m_right, sum);
+
+    // Sum left/right + current and return
+    return numPaths;
+}
+
+template <typename DataType>
+int BinaryTree<DataType>::PathSumHelper(BinaryNode<DataType>* currNode, int targetSum, int currSum){
+    if(currNode == NULL){
+        return 0;
+    }
+
+    // Add current value to sum
+    currSum += currNode->m_data;
+
+    int sumPaths = 0;
+    // Check if sum reached
+    if(currSum == targetSum){
+        sumPaths++;
+    }
+
+    // Repeat for left and right nodes
+    sumPaths += PathSumHelper(currNode->m_left, targetSum, currSum);
+    sumPaths += PathSumHelper(currNode->m_right, targetSum, currSum);
+
+    return sumPaths;
 }
 
 template <typename DataType>
